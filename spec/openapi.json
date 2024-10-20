@@ -1,0 +1,918 @@
+{
+  "openapi": "3.0.0",
+  "info": {
+    "title": "Saascannon Account Management API",
+    "description": "API for managing user accounts and subscriptions in 1st person using Saascannon user credentials.",
+    "version": "1.0.0"
+  },
+  "servers": [
+    {
+      "url": "{protocol}://{applicationName}.{clusterName}.saascannon.app/accounts-api",
+      "variables": {
+        "protocol": {
+          "default": "https",
+          "enum": ["https", "http"]
+        },
+        "applicationName": {
+          "default": "test-application",
+          "description": "The application name given at creation time"
+        },
+        "clusterName": {
+          "default": "uks-1",
+          "description": "The cluster that the application is a part of"
+        }
+      }
+    }
+  ],
+  "paths": {
+    "/account": {
+      "get": {
+        "tags": ["Account"],
+        "operationId": "getAccountInfo",
+        "summary": "Get account information",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/AccountInformationResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          }
+        }
+      },
+      "patch": {
+        "tags": ["Account"],
+        "operationId": "updateAccountInfo",
+        "summary": "Update account information",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UpdateAccount"
+        },
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/AccountUpdatedResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnexpectedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "500": {
+            "$ref": "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/account/reset-password": {
+      "post": {
+        "tags": ["Account"],
+        "operationId": "resetPassword",
+        "summary": "Sends the user a reset password link via email",
+        "responses": {
+          "201": {
+            "description": "Password reset was sent"
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnexpectedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "500": {
+            "$ref": "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/account/email-verification": {
+      "post": {
+        "tags": ["Account"],
+        "operationId": "requestEmailVerification",
+        "summary": "Request an email verification link",
+        "responses": {
+          "201": {
+            "description": "Email verification was sent"
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnexpectedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "500": {
+            "$ref": "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/auth-providers": {
+      "get": {
+        "tags": ["Auth Providers"],
+        "operationId": "getAuthProviders",
+        "summary": "Get user auth providers",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/AuthProvidersResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "500": {
+            "$ref": "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/auth-providers/{authProviderName}": {
+      "parameters": [
+        {
+          "name": "authProviderName",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string"
+          }
+        }
+      ],
+      "delete": {
+        "tags": ["Auth Providers"],
+        "operationId": "unlinkAuthProvider",
+        "summary": "Unlink user auth provider",
+        "responses": {
+          "204": {
+            "description": "Auth provider successfully unlinked"
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnexpectedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "500": {
+            "$ref": "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/shop": {
+      "parameters": [
+        {
+          "name": "billableId",
+          "in": "query",
+          "required": false,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "get": {
+        "tags": ["Shop"],
+        "operationId": "getShop",
+        "summary": "Get user shop",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/ShopResponse"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnexpectedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "500": {
+            "$ref": "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/shop/plans/{planId}/checkout": {
+      "parameters": [
+        {
+          "name": "planId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "post": {
+        "tags": ["Shop"],
+        "operationId": "createCheckoutSession",
+        "summary": "Create a shop checkout session for the current user",
+        "requestBody": {
+          "content": {
+            "application/json": {
+              "schema": {
+                "type": "object",
+                "properties": {
+                  "userCustomerCountry": {
+                    "type": "string",
+                    "pattern": "^[A-Z]{2}$"
+                  },
+                  "customerEmail": {
+                    "type": "string",
+                    "format": "email"
+                  },
+                  "billableId": {
+                    "description": "The ID of the billable that the plan is for. If not provided the user's billable will be used. If there is no user billable one will be created where user billables are enabled.",
+                    "type": "string",
+                    "format": "uuid"
+                  }
+                },
+                "additionalProperties": false
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "$ref": "#/components/responses/CheckoutResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnexpectedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "500": {
+            "$ref": "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/shop/subscriptions/{subscriptionId}": {
+      "parameters": [
+        {
+          "name": "subscriptionId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "patch": {
+        "tags": ["Shop"],
+        "operationId": "updateSubscription",
+        "summary": "Update a subscription",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UpdateSubscription"
+        },
+        "responses": {
+          "200": {
+            "description": "Subscription Updated"
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnexpectedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "500": {
+            "$ref": "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    },
+    "/shop/subscriptions/{subscriptionId}/payment-method": {
+      "parameters": [
+        {
+          "name": "subscriptionId",
+          "in": "path",
+          "required": true,
+          "schema": {
+            "type": "string",
+            "format": "uuid"
+          }
+        }
+      ],
+      "patch": {
+        "tags": ["Shop"],
+        "operationId": "updateSubscriptionPaymentMethod",
+        "summary": "Update a subscription's payment method",
+        "responses": {
+          "200": {
+            "$ref": "#/components/responses/UpdateSubscriptionPaymentMethodResponse"
+          },
+          "400": {
+            "$ref": "#/components/responses/InvalidInput"
+          },
+          "401": {
+            "$ref": "#/components/responses/Unauthorized"
+          },
+          "404": {
+            "$ref": "#/components/responses/NotFound"
+          },
+          "422": {
+            "$ref": "#/components/responses/UnexpectedError"
+          },
+          "403": {
+            "$ref": "#/components/responses/Forbidden"
+          },
+          "409": {
+            "$ref": "#/components/responses/Conflict"
+          },
+          "500": {
+            "$ref": "#/components/responses/UnexpectedError"
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "responses": {
+      "UpdateSubscriptionPaymentMethodResponse": {
+        "description": "Payment Method Update Information",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "updatePaymentMethodUrl": {
+                  "type": "string"
+                }
+              },
+              "required": ["updatePaymentMethodUrl"],
+              "additionalProperties": false
+            }
+          }
+        }
+      },
+      "CheckoutResponse": {
+        "description": "Checkout information",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "checkoutUrl": {
+                  "type": "string"
+                }
+              },
+              "required": ["checkoutUrl"],
+              "additionalProperties": false
+            }
+          }
+        }
+      },
+      "AccountInformationResponse": {
+        "description": "Account information retrieved",
+        "content": {
+          "application/json": {
+            "schema": {
+              "required": true,
+              "$ref": "#/components/schemas/Account"
+            }
+          }
+        }
+      },
+      "AccountUpdatedResponse": {
+        "description": "Account updated",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Account"
+            }
+          }
+        }
+      },
+      "AuthProvidersResponse": {
+        "description": "User auth methods",
+        "content": {
+          "application/json": {
+            "schema": {
+              "type": "object",
+              "properties": {
+                "linked": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/UserAuthProvider"
+                  }
+                },
+                "unlinked": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/AuthProvider"
+                  }
+                }
+              },
+              "required": ["linked", "unlinked"],
+              "additionalProperties": false
+            }
+          }
+        }
+      },
+      "ShopResponse": {
+        "description": "Shop",
+        "content": {
+          "application/json": {
+            "schema": {
+              "properties": {
+                "countrySelectionRequiredForSubscription": {
+                  "type": "boolean"
+                },
+                "emailRequiredForCountries": {
+                  "oneOf": [
+                    {
+                      "description": "Used to indicate country codes that an email is needed for",
+                      "type": "array",
+                      "items": {
+                        "type": "string"
+                      }
+                    },
+                    {
+                      "description": "Used to indicate a flat rule that email is needed or not",
+                      "type": "boolean"
+                    }
+                  ]
+                },
+                "services": {
+                  "items": {
+                    "properties": {
+                      "id": {
+                        "type": "string",
+                        "format": "uuid"
+                      },
+                      "description": {
+                        "type": "string",
+                        "nullable": true
+                      },
+                      "availablePlans": {
+                        "items": {
+                          "$ref": "#/components/schemas/Plan"
+                        },
+                        "type": "array"
+                      },
+                      "activePlan": {
+                        "$ref": "#/components/schemas/ServiceActivePlan"
+                      },
+                      "name": {
+                        "type": "string"
+                      }
+                    },
+                    "required": [
+                      "availablePlans",
+                      "activePlan",
+                      "name",
+                      "id",
+                      "description"
+                    ],
+                    "type": "object"
+                  },
+                  "type": "array"
+                }
+              },
+              "required": [
+                "services",
+                "countrySelectionRequiredForSubscription",
+                "emailRequiredForCountries"
+              ],
+              "type": "object",
+              "description": "Details for a shop tailored to the customer"
+            }
+          }
+        }
+      },
+      "InvalidInput": {
+        "description": "Invalid User Input",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "NotFound": {
+        "description": "The specified resource was not found",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Conflict": {
+        "description": "There was a conflict in the specified resource action",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Unauthorized": {
+        "description": "Unauthorized",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "Forbidden": {
+        "description": "Forbidden",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      },
+      "UnexpectedError": {
+        "description": "An Unexpected Error Occured",
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/Error"
+            }
+          }
+        }
+      }
+    },
+    "requestBodies": {
+      "UpdateAccount": {
+        "description": "Update Account Request",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/AccountUpdate"
+            }
+          }
+        }
+      },
+      "UpdateSubscription": {
+        "description": "Update Subscription Request",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UpdateSubscription"
+            }
+          }
+        }
+      }
+    },
+    "schemas": {
+      "UpdateSubscription": {
+        "type": "object",
+        "properties": {
+          "planId": {
+            "type": "string"
+          },
+          "cancelAtPeriodEnd": {
+            "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "Plan": {
+        "properties": {
+          "pricingDetails": {
+            "properties": {
+              "hasVolumePricing": {
+                "type": "boolean",
+                "description": "True if there are prices in the subscription that are using volume pricing. This helps indicate if there may be further charges beyond `baseAmount`"
+              },
+              "hasGraduatedPricing": {
+                "type": "boolean",
+                "description": "True if there are prices in the subscription that are using graduated pricing. This helps indicate if there may be further charges beyond `baseAmount`"
+              },
+              "baseAmount": {
+                "type": "number",
+                "format": "double",
+                "description": "All of the prices which have a `per_unit` billing scheme summed together"
+              }
+            },
+            "required": [
+              "hasVolumePricing",
+              "hasGraduatedPricing",
+              "baseAmount"
+            ],
+            "type": "object",
+            "description": "Information about the pricing of the plan. This is a summary and gives an indication of the price, but is not absolute as prices may vary with metered billing etc..."
+          },
+          "recurringIntervalFrequency": {
+            "type": "number",
+            "format": "double",
+            "nullable": true
+          },
+          "recurringInterval": {
+            "type": "string",
+            "nullable": true
+          },
+          "recurring": {
+            "type": "boolean"
+          },
+          "currency": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          }
+        },
+        "required": [
+          "pricingDetails",
+          "recurringIntervalFrequency",
+          "recurringInterval",
+          "recurring",
+          "currency",
+          "name",
+          "id"
+        ],
+        "type": "object"
+      },
+      "Subscription": {
+        "properties": {
+          "plan": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "status": {
+            "type": "string"
+          },
+          "provider": {
+            "type": "string"
+          },
+          "id": {
+            "type": "string",
+            "format": "uuid"
+          },
+          "cancelAtPeriodEnd": {
+            "type": "boolean"
+          },
+          "currentPeriodEnd": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "currentPeriodStart": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "invoices": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "id": {
+                  "type": "string",
+                  "format": "uuid"
+                },
+                "status": {
+                  "type": "string"
+                },
+                "totalAmount": {
+                  "type": "integer"
+                },
+                "currency": {
+                  "type": "string"
+                },
+                "createdAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "updatedAt": {
+                  "type": "string",
+                  "format": "date-time"
+                },
+                "pdfUrl": {
+                  "type": "string"
+                },
+                "invoiceNumber": {
+                  "type": "string"
+                }
+              },
+              "required": [
+                "id",
+                "status",
+                "totalAmount",
+                "currency",
+                "createdAt",
+                "updatedAt",
+                "pdfUrl",
+                "invoiceNumber"
+              ],
+              "additionalProperties": false
+            }
+          }
+        },
+        "required": [
+          "status",
+          "provider",
+          "id",
+          "cancelAtPeriodEnd",
+          "currentPeriodStart",
+          "currentPeriodEnd",
+          "invoices"
+        ],
+        "type": "object"
+      },
+      "ServiceActivePlan": {
+        "properties": {
+          "plan": {
+            "$ref": "#/components/schemas/Plan"
+          },
+          "subscription": {
+            "$ref": "#/components/schemas/Subscription"
+          }
+        },
+        "required": ["plan", "subscription"],
+        "type": "object",
+        "nullable": true
+      },
+      "Error": {
+        "title": "Error",
+        "type": "object",
+        "required": ["message"],
+        "properties": {
+          "message": {
+            "description": "A human readable error message",
+            "type": "string"
+          }
+        }
+      },
+      "Account": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email",
+            "nullable": true
+          },
+          "emailVerified": {
+            "type": "boolean"
+          }
+        },
+        "required": ["name", "email", "emailVerified"],
+        "additionalProperties": false
+      },
+      "AccountUpdate": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string"
+          },
+          "email": {
+            "type": "string",
+            "format": "email"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UserAuthProvider": {
+        "type": "object",
+        "properties": {
+          "status": {
+            "type": "string"
+          },
+          "authProvider": {
+            "$ref": "#/components/schemas/AuthProvider"
+          },
+          "createdAt": {
+            "type": "string",
+            "format": "date-time"
+          },
+          "lastReauthenticatedAt": {
+            "type": "string",
+            "format": "date-time"
+          }
+        },
+        "required": [
+          "status",
+          "authProvider",
+          "createdAt",
+          "lastReauthenticatedAt"
+        ],
+        "additionalProperties": false
+      },
+      "AuthProvider": {
+        "type": "object",
+        "properties": {
+          "id": {
+            "type": "string"
+          },
+          "name": {
+            "type": "string"
+          },
+          "displayName": {
+            "type": "string"
+          },
+          "iconUrl": {
+            "type": "string"
+          },
+          "type": {
+            "type": "string"
+          }
+        },
+        "required": ["id", "name", "displayName", "iconUrl", "type"],
+        "additionalProperties": false
+      }
+    },
+    "securitySchemes": {
+      "bearerAuth": {
+        "type": "http",
+        "scheme": "bearer"
+      }
+    }
+  },
+  "security": [
+    {
+      "bearerAuth": []
+    }
+  ]
+}
