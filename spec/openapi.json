@@ -649,6 +649,11 @@
           "planId": {
             "type": "string"
           },
+          "billableId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the billable that the plan is for. If not provided the user's billable will be used."
+          },
           "cancelAtPeriodEnd": {
             "type": "boolean"
           }
