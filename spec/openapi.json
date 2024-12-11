@@ -374,6 +374,10 @@
         "tags": ["Shop"],
         "operationId": "updateSubscriptionPaymentMethod",
         "summary": "Update a subscription's payment method",
+        "description": "This endpoint allows a subscription payment method to be updated. At this time, this results in a url which the user can be redirected to to complete the action.",
+        "requestBody": {
+          "$ref": "#/components/requestBodies/UpdateSubscriptionPaymentMethod"
+        },
         "responses": {
           "200": {
             "$ref": "#/components/responses/UpdateSubscriptionPaymentMethodResponse"
@@ -640,6 +644,17 @@
             }
           }
         }
+      },
+      "UpdateSubscriptionPaymentMethod": {
+        "description": "Update Subscription Payment Method Request",
+        "required": true,
+        "content": {
+          "application/json": {
+            "schema": {
+              "$ref": "#/components/schemas/UpdateSubscriptionPaymentMethod"
+            }
+          }
+        }
       }
     },
     "schemas": {
@@ -656,6 +671,17 @@
           },
           "cancelAtPeriodEnd": {
             "type": "boolean"
+          }
+        },
+        "additionalProperties": false
+      },
+      "UpdateSubscriptionPaymentMethod": {
+        "type": "object",
+        "properties": {
+          "billableId": {
+            "type": "string",
+            "format": "uuid",
+            "description": "The ID of the billable that the plan is for. If not provided the user's billable will be used."
           }
         },
         "additionalProperties": false
