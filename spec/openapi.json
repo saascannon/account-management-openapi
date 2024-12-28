@@ -1,5 +1,5 @@
 {
-  "openapi": "3.0.0",
+  "openapi": "3.1.0",
   "info": {
     "title": "Saascannon Account Management API",
     "description": "API for managing user accounts and subscriptions in 1st person using Saascannon user credentials.",
@@ -24,6 +24,60 @@
       }
     }
   ],
+  "webhooks": {
+    "subscription.updated": {
+      "post": {
+        "security": [],
+        "tags": ["Webhooks"],
+        "requestBody": {
+          "description": "The subscription that was updated",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subscription"
+              }
+            }
+          }
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/WebhookSignatureHeader" },
+          { "$ref": "#/components/parameters/WebhookTypeHeader" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Send a 200 status code to indicate that the webhook was processed successfully"
+          }
+        }
+      }
+    },
+    "subscription.created": {
+      "post": {
+        "security": [],
+        "tags": ["Webhooks"],
+        "requestBody": {
+          "description": "The subscription that was updated",
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/Subscription"
+              }
+            }
+          }
+        },
+        "parameters": [
+          { "$ref": "#/components/parameters/WebhookSignatureHeader" },
+          { "$ref": "#/components/parameters/WebhookTypeHeader" }
+        ],
+        "responses": {
+          "200": {
+            "description": "Send a 200 status code to indicate that the webhook was processed successfully"
+          }
+        }
+      }
+    }
+  },
   "paths": {
     "/account": {
       "get": {
@@ -408,6 +462,26 @@
     }
   },
   "components": {
+    "parameters": {
+      "WebhookSignatureHeader": {
+        "name": "x-webhook-signature",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "A sha256 HMAC signature of the raw request body using the webhook secret as the key. This value should be compared by the receiver to ensure the request is authentic."
+      },
+      "WebhookTypeHeader": {
+        "name": "x-webhook-type",
+        "in": "header",
+        "required": true,
+        "schema": {
+          "type": "string"
+        },
+        "description": "The type of webhook event that is being sent. This should be used to determine how to handle the request."
+      }
+    },
     "responses": {
       "UpdateSubscriptionPaymentMethodResponse": {
         "description": "Payment Method Update Information",
@@ -448,7 +522,6 @@
         "content": {
           "application/json": {
             "schema": {
-              "required": true,
               "$ref": "#/components/schemas/Account"
             }
           }
@@ -944,6 +1017,36 @@
   "security": [
     {
       "bearerAuth": []
+    }
+  ],
+  "tags": [
+    {
+      "name": "Webhooks",
+      "description": "Webhook events which are sent when certain actions are done via the account management api. You can listen to these to keep your system in sync.",
+      "externalDocs": {
+        "description": "Read more about webhooks and how to handle them on Saascannon",
+        "url": "https://docs.saascannon.com/webhooks"
+      }
+    },
+    {
+      "name": "Account",
+      "description": "Account management related endpoints"
+    },
+    {
+      "name": "Auth Providers",
+      "description": "Auth provider related endpoints",
+      "externalDocs": {
+        "description": "Auth Providers Documentation",
+        "url": "https://docs.saascannon.com/auth-providers"
+      }
+    },
+    {
+      "name": "Shop",
+      "description": "Shop related endpoints",
+      "externalDocs": {
+        "description": "Shop Documentation",
+        "url": "https://docs.saascannon.com/shop"
+      }
     }
   ]
 }

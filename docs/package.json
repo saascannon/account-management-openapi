@@ -2,7 +2,7 @@
   "name": "saascannon-account-management-openapi-docs",
   "version": "0.0.1",
   "dependencies": {
-    "@redocly/cli": "1.10.5"
+    "@redocly/cli": "1.26.1"
   },
   "private": true,
   "scripts": {
