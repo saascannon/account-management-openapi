@@ -3,7 +3,7 @@
   "info": {
     "title": "Saascannon Account Management API",
     "description": "API for managing user accounts and subscriptions in 1st person using Saascannon user credentials.",
-    "version": "1.0.0"
+    "version": "1.0.1"
   },
   "servers": [
     {
@@ -839,7 +839,8 @@
           },
           "currentPeriodEnd": {
             "type": "string",
-            "format": "date-time"
+            "format": "date-time",
+            "nullable": true
           },
           "currentPeriodStart": {
             "type": "string",
